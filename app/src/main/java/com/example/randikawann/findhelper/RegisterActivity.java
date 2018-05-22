@@ -12,13 +12,14 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.ProviderQueryResult;
 
 public class RegisterActivity extends AppCompatActivity {
 
     EditText etemail;
     //Button btnnext;
-    FirebaseAuth auth;
+    private FirebaseAuth auth;
     ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,10 @@ public class RegisterActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         dialog = new ProgressDialog(this);
     }
-
+//    public void nextButtonClicked(View v){
+//        FirebaseUser currentUser = auth.getCurrentUser();
+//        updateUI(currentUser);
+//    }
     public void nextButtonClicked(View v){
         dialog.setMessage("cheking email address");
         dialog.show();
@@ -42,9 +46,16 @@ public class RegisterActivity extends AppCompatActivity {
                             boolean check = !task.getResult().getProviders().isEmpty();
                             if(!check){
                                 //email doesnot exit, so we can create this email with user
-                                Intent myIntent = new Intent();
-                                myIntent.putExtra("email",etemail.getText().toString());
-                                startActivity(myIntent);
+
+                                try {
+                                    Intent myIntent = new Intent();
+                                    myIntent.putExtra("email", etemail.getText().toString());
+                                    startActivity(myIntent);
+
+                                }catch(Exception e){
+                                    System.out.println("Class not found exception");
+                                }
+
                             }else{
                                 dialog.dismiss();
                                 Toast.makeText(getApplicationContext(),"This email is already registered",Toast.LENGTH_SHORT).show();
